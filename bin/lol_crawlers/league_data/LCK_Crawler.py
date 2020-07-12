@@ -3,51 +3,42 @@ import requests
 import pandas as pd
 import xlrd
 from pandas import ExcelWriter
+import re
+from selenium import webdriver
 import time
-
-
+import numpy as np
+import leagueoflegends_utils as utils
 import mysql.connector
 
-##################################################### DATABASE CONNECTION ########################################################################################################################
-mydb = mysql.connector.connect(
-  host="146.148.2.232",
-  user="root",
-  passwd="Qwertyuiop7*",
-  database="egamingdata"
-)
+## GLOBAL VARIABLES ##
 
-mycursor = mydb.cursor()
+table_name = 'lck'
+url = 'https://oracleselixir.com/stats/teams/byTournament/LCK%2F2020%20Season%2FSummer%20Season'
 
-sql = "truncate lck"
+#Clear database table for new insert
+utils.clear_db_table(table_name)
 
-mycursor.execute(sql)
+options = webdriver.ChromeOptions()
+options.add_argument("--headless")
+driver = webdriver.Chrome("C:\\ChromeDriver\\chromedriver.exe", options=options)
+driver.get(url)
+time.sleep(10)
+squadPage=driver.page_source
+soup = BeautifulSoup(squadPage, 'html.parser')
 
-mydb.commit()
-##################################################################################################################################################################################################
+#List of data to gather from datapoint
+label_list = ['Team', 'GP', 'W', 'L', 'AGT', 'K', 'D', 'KD', 'CKPM', 'GPR', 'GSPD', 'EGR', 'MLR', 'GD15', 'FB%',
+              'FT%', 'F3T%', 'HLD%', 'FD%', 'DRG%', 'ELD%', 'FBN%', 'BN%', 'LNE%', 'JNG%', 'WPM', 'CWPM', 'WCPM']
 
-url = 'https://oracleselixir.com/statistics/lck/lck-2020-summer-regular-season-team-statistics/'
+result = soup.find_all("div", attrs={"label":True})
+records = []
+for elem in result:
+    records.append(elem.text) 
 
-user_agent = 'Chrome/80.0.3987.132 Mozilla/5.0'
-r = requests.get(url, headers={'User-Agent': user_agent})
-soup = BeautifulSoup(r.text, 'html.parser')
+#Organized data by team
+teams_list = utils.split_list(28, records)
 
-print("##### Retrieving data... #####")
-
-date=soup.find("em")
-lastupdateddate=date.get_text().replace("For a full list of abbreviations and explanations, check the Definitions page.","").replace("Last Updated:","").strip()
-
-tables = soup.find_all('table')
-
-df = pd.read_html(str(tables))[0]
-
-df.fillna(0, inplace=True)
-
-dflist=df.values.tolist()
-
-print("##### Data retrieved successfully #####")
-
-print(dflist[0])
-############### INSERTING TEAM IMAGES #################################
+#TO-DO: Create a separate method (leagueoflegends_utils.py) to retrieve team images from database
 images = ['<img style="width: 3rem;margin-right: 2rem;" src="https://gamepedia.cursecdn.com/lolesports_gamepedia_en/thumb/7/70/Afreeca_Freecslogo_square.png/123px-Afreeca_Freecslogo_square.png?version=3e7b76188026856871f1851af6e6eac1">',
           '<img style="width: 3rem;margin-right: 2rem;" src="https://gamepedia.cursecdn.com/lolesports_gamepedia_en/thumb/6/6d/DAMWON_Gaminglogo_square.png/123px-DAMWON_Gaminglogo_square.png?version=4d7ea689932d8cd48577361b3590c587">',
           '<img style="width: 3rem;margin-right: 2rem;" src="https://gamepedia.cursecdn.com/lolesports_gamepedia_en/thumb/d/d3/DRXlogo_square.png/123px-DRXlogo_square.png?version=bcc69bb3af951c72deeb18acf1b87f48">',
@@ -59,25 +50,8 @@ images = ['<img style="width: 3rem;margin-right: 2rem;" src="https://gamepedia.c
           '<img style="width: 3rem;margin-right: 2rem;" src="https://gamepedia.cursecdn.com/lolesports_gamepedia_en/thumb/a/a2/T1logo_square.png/123px-T1logo_square.png?version=8b367d7d4703b0f9413bfb3d3d75c1d1">',
           '<img style="width: 3rem;margin-right: 2rem;" src="https://gamepedia.cursecdn.com/lolesports_gamepedia_en/thumb/e/e9/Team_Dynamicslogo_square.png/123px-Team_Dynamicslogo_square.png?version=71432d077a291b8ae4e3d7f30c1b199e">']
 
-i = 0
-############# INSERTING VALUES ############################################
-for line in dflist:
-	sql = "INSERT INTO lck (Team, Gp,W,L,agt,k,D,KD,CKPM,GPR,GSPD,EGR,MLR,GD15,FB,FT,F3T,HLD,FD,DRG,ELD,FBN,BN,LNE,JNG,WPM,CWPM,WCPM,Last_Updated, Image) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, %s)"
-	val = (line[0],line[1],line[2],line[3],line[4],line[5],line[6],line[7],line[8],line[9],line[10],line[11],line[12],line[13],line[14],line[15],line[16],line[17],line[18],line[19],line[20],line[21],line[22],line[23],line[24],line[25],line[26],line[27],lastupdateddate, images[i]) 
-	mycursor.execute(sql, val)
-	mydb.commit()
-	i += 1
-print("##### Inserted data into database ##### ")
+#Database Insert
+utils.save_data(teams_list, table_name, soup, images)
+print("Insert OK...")
 
-############# FILE CREATION ###########################
-date = time.strftime("%d-%m-%Y")
-path = "C:\\Users\Administrator\\Desktop\\Crawlers\\LeagueOfLegends\\LCK\\"
-filename = "LCK-" + date + ".xlsx"
-pathfile = path + filename
-
-print(df)
-
-print("##### Creating backup data file ##### ")
-df.to_excel(pathfile)
-
-print("##### Backup data file saved in " + pathfile +  " ##### ")
+driver.quit()
