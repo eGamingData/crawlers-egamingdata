@@ -1,33 +1,22 @@
-from bs4 import BeautifulSoup
-import requests
-import pandas as pd
-import xlrd
-from pandas import ExcelWriter
-import re
-from selenium import webdriver
-import time
-import numpy as np
-import mysql.connector
 #Import LeagueOfLegends Common Module
 import sys
 sys.path.append('\bin\common')
 from leagueoflegends import leagueoflegends_utils as utils
 
 ## GLOBAL VARIABLES ##
-
 table_name = 'cblol'
 url = 'https://oracleselixir.com/stats/teams/byTournament/CBLOL%2F2020%20Season%2FSplit%202'
 
 #Clear database table for new insert
 utils.clear_db_table(table_name)
 
-options = webdriver.ChromeOptions()
+options = utils.webdriver.ChromeOptions()
 options.add_argument("--headless")
-driver = webdriver.Chrome("C:\\ChromeDriver\\chromedriver.exe", options=options)
+driver = utils.webdriver.Chrome("C:\\ChromeDriver\\chromedriver.exe", options=options)
 driver.get(url)
-time.sleep(10)
+utils.time.sleep(10)
 squadPage=driver.page_source
-soup = BeautifulSoup(squadPage, 'html.parser')
+soup = utils.BeautifulSoup(squadPage, 'html.parser')
 
 #List of data to gather from datapoint
 label_list = ['Team', 'GP', 'W', 'L', 'AGT', 'K', 'D', 'KD', 'CKPM', 'GPR', 'GSPD', 'EGR', 'MLR', 'GD15', 'FB%',
