@@ -12,7 +12,7 @@ import mysql.connector
 
 ## GLOBAL VARIABLES ##
 
-table_name = 'lpl'
+table_name = 'lpl_test'
 url = 'https://oracleselixir.com/stats/teams/byTournament/LPL%2F2020%20Season%2FSummer%20Season'
 
 #Clear database table for new insert
@@ -27,16 +27,16 @@ squadPage=driver.page_source
 soup = BeautifulSoup(squadPage, 'html.parser')
 
 #List of data to gather from datapoint
-label_list = ['Team', 'GP', 'W', 'L', 'AGT', 'K', 'D', 'KD', 'CKPM', 'FB%',
-              'FT%', 'DRG%', 'BN%', 'JNG', 'WPM', 'CWPM', 'WCPM']
+label_list = ['Team', 'GP', 'W', 'L', 'AGT', 'K', 'D', 'KD', 'CKPM', 'GPR', 'GSPD', 'EGR', 'MLR', 'GD15', 'FB%',
+              'FT%', 'F3T%', 'HLD%', 'FD%', 'DRG%', 'ELD%', 'FBN%', 'BN%', 'LNE%', 'JNG%', 'WPM', 'CWPM', 'WCPM']
 
 result = soup.find_all("div", attrs={"label":True})
 records = []
 for elem in result:
     records.append(elem.text) 
 
-#Organized data by team (17 being the data elements for every team on LPL league)
-teams_list = utils.split_list(17, records)
+#Organized data by team
+teams_list = utils.split_list(28, records)
 
 #TO-DO: Create a separate method (leagueoflegends_utils.py) to retrieve team images from database
 images = ['<img style="width: 3rem;margin-right: 2rem;" src="https://gamepedia.cursecdn.com/lolesports_gamepedia_en/thumb/9/91/Bilibili_Gaminglogo_square.png/123px-Bilibili_Gaminglogo_square.png?version=fe84610eef61a3de21d2fec18b3e40ba">',
@@ -58,7 +58,7 @@ images = ['<img style="width: 3rem;margin-right: 2rem;" src="https://gamepedia.c
           '<img style="width: 3rem;margin-right: 2rem;" src="https://gamepedia.cursecdn.com/lolesports_gamepedia_en/thumb/3/3d/Victory_Fivelogo_square.png/123px-Victory_Fivelogo_square.png?version=12c5726510e0951c10506ab8651b25e9">']
 
 #Database Insert
-utils.save_data_lpl(teams_list, soup, images)
+utils.save_data(teams_list, table_name, soup, images)
 print("Insert OK...")
 
 driver.quit()
