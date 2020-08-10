@@ -1,1 +1,1 @@
-import db_config as db
+import db_config 

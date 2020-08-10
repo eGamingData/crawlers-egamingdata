@@ -6,6 +6,8 @@
 
 ## Imports ##
 from bs4 import BeautifulSoup
+import sys
+sys.path.append('\bin\common')
 import db_config as db
 
 #Function to split a records list into X equal element matrix.

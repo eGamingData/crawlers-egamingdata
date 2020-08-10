@@ -1,4 +1,7 @@
-
+import sys
+sys.path.append('\bin\common')
+import db_config as db
+import mysql.connector
 
 
 
@@ -18,28 +21,6 @@ with open('input.csv', newline='') as f:
 
 
 #######################################################reading data from csv###########################################################
-
-########################################################my sql connector##################################################
-
-import mysql.connector
-
-
-
-mydb = mysql.connector.connect(
- host="146.148.2.232",
-  user="root",
-  passwd="",
-  database="egamingdata"
-)
-
-mycursor = mydb.cursor()
-
-
-
-#########################################################my sql connector#######################################################
-
-
-mycursor = mydb.cursor()
 
 fstr=""
 

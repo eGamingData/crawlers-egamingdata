@@ -8,6 +8,8 @@ from selenium import webdriver
 import time
 import numpy as np
 import mysql.connector
+import sys
+sys.path.append('\bin\common')
 import db_config as db
 
 

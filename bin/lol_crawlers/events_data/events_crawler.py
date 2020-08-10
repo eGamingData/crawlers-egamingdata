@@ -5,17 +5,11 @@ import xlrd
 from pandas import ExcelWriter
 import re
 
-import mysql.connector
-##################################################################################################################################################################################
-mydb = mysql.connector.connect(
-  host="185.253.154.97",
-  user="root",
-  passwd="Qwertyuiop7*",
-  database="egamingdata"
-)
+import sys
+sys.path.append('\bin\common')
+import db_config as db
 
-mycursor = mydb.cursor(buffered=True)
-##################################################################################################################################################################################
+import mysql.connector
 leagues=['lec','lcs','lck','cblol','pcs','tcl','vcs']
 league_url=['https://lol.gamepedia.com/LEC/2020_Season/Summer_Season','https://lol.gamepedia.com/LCS/2020_Season/Summer_Season','https://lol.gamepedia.com/LCK/2020_Season/Summer_Season','https://lol.gamepedia.com/CBLOL_2020_Split_2','https://lol.gamepedia.com/PCS_2020_Summer','https://lol.gamepedia.com/TCL_2020_Summer','https://lol.gamepedia.com/VCS_2020_Summer']
 arr_week=[]
