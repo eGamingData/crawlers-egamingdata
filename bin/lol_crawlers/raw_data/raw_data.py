@@ -1,9 +1,12 @@
 import sys
 sys.path.append('\bin\common')
 import db_config as db
+from leagueoflegends import leagueoflegends_utils as utils
+
 import mysql.connector
 
-
+url='https://oracleselixir-downloadable-match-data.s3-us-west-2.amazonaws.com/2020_LoL_esports_match_data_from_OraclesElixir_20200810.csv'
+utils.download_rawdata_csv(url)
 
 
 #######################################################reading data from csv##########################################################
@@ -38,19 +41,19 @@ createquery=f"create table if not EXISTS raw_data ({fstr[:-3]} )"
 
 print(createquery)
 
-mycursor.execute(createquery)
+db.mycursor.execute(createquery)
 
-mydb.commit()
+db.mydb.commit()
 
 
 sql = "truncate raw_data"
 
 
-mycursor.execute(sql)
+db.mycursor.execute(sql)
 
 
 
-mydb.commit()
+db.mydb.commit()
 
 
 

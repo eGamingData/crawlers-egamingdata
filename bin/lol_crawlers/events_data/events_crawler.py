@@ -1,4 +1,3 @@
-from bs4 import BeautifulSoup
 import requests
 import pandas as pd
 import xlrd
@@ -8,6 +7,7 @@ import re
 import sys
 sys.path.append('\bin\common')
 import db_config as db
+from leagueoflegends import leagueoflegends_utils as utils
 
 import mysql.connector
 leagues=['lec','lcs','lck','cblol','pcs','tcl','vcs']
@@ -16,8 +16,8 @@ arr_week=[]
 j=0
 for j in range (0,len(leagues)):
         sql = "SELECT week FROM lol_events WHERE league='"+leagues[j]+"'"
-        mycursor.execute(sql)
-        week = mycursor.fetchall()
+        db.mycursor.execute(sql)
+        week = db.mycursor.fetchall()
         week = ''.join(week[0])
         num_week=week[4:]
         num_week=int(num_week)
@@ -26,13 +26,13 @@ for j in range (0,len(leagues)):
 
 j=0
 sql="TRUNCATE lol_events"
-mycursor.execute(sql)
-mydb.commit()
+db.mycursor.execute(sql)
+db.mydb.commit()
 for j in range (0,len(leagues)):
         user_agent = 'Chrome/80.0.3987.132 Mozilla/5.0'
-        r = requests.get(league_url[j], headers={'User-Agent': user_agent})
+        r = utils.requests.get(league_url[j], headers={'User-Agent': user_agent})
 
-        soup = BeautifulSoup(r.text, 'html.parser')
+        soup = utisl.BeautifulSoup(r.text, 'html.parser')
 
         # This will get the div
         # rows = soup.find_all('tr', {'class': re.compile('mdv-week5')})

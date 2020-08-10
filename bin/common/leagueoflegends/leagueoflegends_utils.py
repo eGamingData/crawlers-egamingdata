@@ -4,8 +4,9 @@
 #Last Update: 10/08/2020
 #Description: Common functions for League of Legends esports teams data scraping.
 
-## Imports ##
+## Imports ##########################
 from bs4 import BeautifulSoup
+import os
 from selenium import webdriver
 import pandas as pd
 from pandas import ExcelWriter
@@ -17,6 +18,7 @@ import xlrd
 import sys
 sys.path.append('\bin\common')
 import db_config as db
+####################################
 
 #Function to split a records list into X equal element matrix.
 def split_list (x, records):
@@ -42,14 +44,11 @@ def save_data(teams_list, table_name, soup, images):
        db.mycursor.execute(sql, val)
        db.mydb.commit()
        i += 1
-
-def save_data_lpl(teams_list, soup, images):
-    i = 0
-    lastupdateddate = get_last_update(soup)
-    for team in teams_list:
-       sql = "INSERT INTO lpl (Team,Gp,W,L,agt,k,D,KD,CKPM,DRG,BN,JNG,WPM,CWPM,WCPM,Last_Updated, Image) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-       val = (team[0],team[1],team[2],team[3],team[4],team[5],team[6],team[7],team[8],team[9],team[10],team[11],team[12],team[13],team[14],lastupdateddate, images[i])       
-       db.mycursor.execute(sql, val)
-       db.mydb.commit()
-       i += 1
+       
+#Downloads rawdata in csv format from url
+def download_rawdata_csv(url):   
+   response = requests.get(url)
+   with open(os.path.join("C:\\Users\\Administrator\\Desktop\\Crawler_development\\bin\\lol_crawlers\\raw_data", "input.csv"), 'wb') as f:
+       f.write(response.content)
+   
    
