@@ -1,6 +1,7 @@
 import sys
 sys.path.append('\bin\common')
 import db_config as db
+import configparser
 
 def test_db_connection():    
     try:

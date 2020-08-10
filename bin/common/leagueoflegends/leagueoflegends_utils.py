@@ -1,7 +1,7 @@
 #Author: Xavier Garcia Clavero
 #Organization: eGamingData
 #Creation date Date: 12/07/2020
-#Last Update: 12/07/2020
+#Last Update: 10/08/2020
 #Description: Common functions for League of Legends esports teams data scraping.
 
 ## Imports ##

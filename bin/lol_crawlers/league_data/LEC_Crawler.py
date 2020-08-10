@@ -7,8 +7,12 @@ import re
 from selenium import webdriver
 import time
 import numpy as np
-import leagueoflegends_utils as utils
 import mysql.connector
+
+#Import LeagueOfLegends Common Module
+import sys
+sys.path.append('\bin\common')
+from leagueoflegends import leagueoflegends_utils as utils
 
 ## GLOBAL VARIABLES ##
 
