@@ -19,6 +19,8 @@ for league in leagues:
     league_acronym = league [0]
     print("League: " + league_acronym)
 
+    #TO-DO - Create a method for the driver init
+    
     options = utils.webdriver.ChromeOptions()
     options.add_argument("--headless")
     driver = utils.webdriver.Chrome("C:\\ChromeDriver\\chromedriver.exe", options=options)
