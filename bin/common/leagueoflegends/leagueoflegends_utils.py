@@ -45,13 +45,24 @@ def save_team_data(teams_list, soup, league, table):
        db.mydb.commit()
        i += 1
 
-#Save teams data into database
+#Save players data into database
 def save_player_data(players_list, soup, league, table):
     i = 0
     lastupdateddate = get_last_update(soup)
     for player in players_list:
        sql = "INSERT INTO " + table + " (Player, Team, Pos, GP, W, CTR, K, D, A, KDA, KP, KS, DTH, FB, GD10, XPD10, CSD10, CSPM, CSP15, DPM, DMG, GOLD, WPM, WCPM, Last_Updated, League) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
        val = (player[0],player[1],player[2],player[3],player[4],player[5],player[6],player[7],player[8],player[9],player[10],player[11],player[12],player[13],player[14],player[15],player[16],player[17],player[18],player[19],player[20],player[21],player[22],player[23],lastupdateddate, league) 
+       db.mycursor.execute(sql, val)
+       db.mydb.commit()
+       i += 1
+
+#Save champions data into database
+def save_champions_data(champions_list, soup, league, table):
+    i = 0
+    lastupdateddate = get_last_update(soup)
+    for champion in champions_list:
+       sql = "INSERT INTO " + table + " (Champion, Pos, GP, P, B, PB, W, CTR, K, D, A, KDA, KP, DTH, FB, GD10, XPD10, CSD10, CSPM, CSP15, DPM, DMG, GOLD, WPM, WCPM, Last_Updated, League) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+       val = (champion[0],champion[1],champion[2],champion[3],champion[4],champion[5],champion[6],champion[7],champion[8],champion[9],champion[10],champion[11],champion[12],champion[13],champion[14],champion[15],champion[16],champion[17],champion[18],champion[19],champion[20],champion[21],champion[22],champion[23], champion[24],lastupdateddate, league) 
        db.mycursor.execute(sql, val)
        db.mydb.commit()
        i += 1
