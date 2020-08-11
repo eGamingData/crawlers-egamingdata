@@ -19,9 +19,6 @@ utils.time.sleep(10)
 squadPage=driver.page_source
 soup = utils.BeautifulSoup(squadPage, 'html.parser')
 
-#List of data to gather from datapoint
-label_list = ['Team', 'GP', 'W', 'L', 'AGT', 'K', 'D', 'KD', 'CKPM', 'GPR', 'GSPD', 'EGR', 'MLR', 'GD15', 'FB%',
-              'FT%', 'F3T%', 'HLD%', 'FD%', 'DRG%', 'ELD%', 'FBN%', 'BN%', 'LNE%', 'JNG%', 'WPM', 'CWPM', 'WCPM']
 
 result = soup.find_all("div", attrs={"label":True})
 records = []
