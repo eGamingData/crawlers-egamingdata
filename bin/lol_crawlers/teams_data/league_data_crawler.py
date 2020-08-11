@@ -4,11 +4,13 @@ sys.path.append('\bin\common')
 from leagueoflegends import leagueoflegends_utils as utils
 import db_config as db
 
-#Clear database table for new insert
-utils.clear_db_table("lol_league_data")
-print("Table lol_league_data cleared...")
+TABLE = "lol_teams_data"
 
-db.mycursor.execute("SELECT league, data_point FROM lol_leagues")
+#Clear database table for new insert
+utils.clear_db_table(TABLE)
+print("Table " + TABLE + " cleared...")
+
+db.mycursor.execute("SELECT league, teams_data_point FROM lol_leagues")
 leagues = db.mycursor.fetchall()
 print("Selected leagues...")
 
@@ -40,6 +42,6 @@ for league in leagues:
     #TO-DO - Retrieve team images to insert at save_data()
     
     #Database Insert
-    utils.save_data(teams_list, soup, league_acronym)
+    utils.save_team_data(teams_list, soup, league_acronym, TABLE)
     print("Data for " + league_acronym + " inserted..." )
     driver.quit()
