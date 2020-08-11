@@ -5,9 +5,11 @@
 # League of Legends Data
 Our crawlers are retreving data from different sources in order to process and organize it on our dashboard.
 
-  - lol_events - League of Legends upcoming eSports Events by league.
-  - lol_rawdata - Raw data from riot games API.
-  - lol_teams - League of Legends currently playing eSports Teams by league.
+  - lol_events - LoL upcoming e-Sports Events for multiple leagues.
+  - lol_raw_data - Raw data from riot games API.
+  - lol_teams - LoL e-Sports Teams.
+  - lol_models - Processed data by the statistical models for the AI Predictions
+  - lol_league_data - Data segmented by teams and leagues.
   
 
 #### Suported leagues
