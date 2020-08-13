@@ -40,6 +40,9 @@ for league in leagues:
     teams_list = utils.split_list(28, records)
 
     #TO-DO - Retrieve team images to insert at save_data()
+    teams = utils.get_league_teams(league)
+    images_list = utils.get_team_image(teams)
+    print(images_list)
     
     #Database Insert
     utils.save_team_data(teams_list, soup, league_acronym, TABLE)

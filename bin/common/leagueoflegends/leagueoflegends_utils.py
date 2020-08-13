@@ -15,6 +15,7 @@ import time
 import requests
 import requests
 import xlrd
+import leaguepedia_parser 
 import sys
 sys.path.append('\bin\common')
 import db_config as db
@@ -27,6 +28,30 @@ def split_list (x, records):
 #Function to get last data update
 def get_last_update(soup):
    return soup.find('time', attrs={'datetime':True}).text
+
+def get_league_teams(league):
+   db.mycursor.execute("SELECT team FROM lol_teams WHERE league ='" + league + "'") 
+   teams = db.mycursor.fetchall()
+   print('List of teams retrieved:' + str(teams))
+   team_names = []
+   for team in teams:
+      team_str = str(team)
+      team_str = team_str[:-3]
+      team_str = team_str[2:]
+      team_names.append(team_str)
+      print(team_str)
+      
+   return team_names
+
+#Funcion to get team images
+def get_team_image(teams):
+   lp = leaguepedia_parser.LeaguepediaParser()
+   images_list = []
+   for team in teams:
+      image = lp.get_team_logo(team)
+      print('Getting image for team:' + team)
+      images_list.append(image)
+   return images_list   
 
 #Function to delete all records from a database table.
 def clear_db_table(table_name):
@@ -72,5 +97,6 @@ def download_rawdata_csv(url):
    response = requests.get(url)
    with open(os.path.join("C:\\Users\\Administrator\\Desktop\\Crawler_development\\bin\\lol_crawlers\\raw_data", "input.csv"), 'wb') as f:
        f.write(response.content)
+
    
    
