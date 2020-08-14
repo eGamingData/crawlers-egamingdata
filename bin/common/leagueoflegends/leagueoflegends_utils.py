@@ -32,15 +32,13 @@ def get_last_update(soup):
 def get_league_teams(league):
    db.mycursor.execute("SELECT team FROM lol_teams WHERE league ='" + league + "'") 
    teams = db.mycursor.fetchall()
-   print('List of teams retrieved:' + str(teams))
+   print('List of teams retrieved: ' + str(teams))
    team_names = []
    for team in teams:
       team_str = str(team)
       team_str = team_str[:-3]
       team_str = team_str[2:]
       team_names.append(team_str)
-      print(team_str)
-      
    return team_names
 
 #Funcion to get team images
@@ -48,9 +46,9 @@ def get_team_image(teams):
    lp = leaguepedia_parser.LeaguepediaParser()
    images_list = []
    for team in teams:
-      image = lp.get_team_logo(team)
-      print('Getting image for team:' + team)
+      image = lp.get_team_logo(team)      
       images_list.append(image)
+      print('Getting image for team: ' + team + ' URL: ' + image)
    return images_list   
 
 #Function to delete all records from a database table.
@@ -60,12 +58,12 @@ def clear_db_table(table_name):
    db.mydb.commit()   
 
 #Save teams data into database
-def save_team_data(teams_list, soup, league, table):
+def save_team_data(teams_list, soup, league, table, images):
     i = 0
     lastupdateddate = get_last_update(soup)
     for team in teams_list:
-       sql = "INSERT INTO " + table + " (Team, Gp,W,L,agt,k,D,KD,CKPM,GPR,GSPD,EGR,MLR,GD15,FB,FT,F3T,HLD,FD,DRG,ELD,FBN,BN,LNE,JNG,WPM,CWPM,WCPM,Last_Updated, League) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, %s)"
-       val = (team[0],team[1],team[2],team[3],team[4],team[5],team[6],team[7],team[8],team[9],team[10],team[11],team[12],team[13],team[14],team[15],team[16],team[17],team[18],team[19],team[20],team[21],team[22],team[23],team[24],team[25],team[26],team[27],lastupdateddate, league) 
+       sql = "INSERT INTO " + table + " (Team, Gp,W,L,agt,k,D,KD,CKPM,GPR,GSPD,EGR,MLR,GD15,FB,FT,F3T,HLD,FD,DRG,ELD,FBN,BN,LNE,JNG,WPM,CWPM,WCPM,Last_Updated, Image, League) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, %s,%s)"
+       val = (team[0],team[1],team[2],team[3],team[4],team[5],team[6],team[7],team[8],team[9],team[10],team[11],team[12],team[13],team[14],team[15],team[16],team[17],team[18],team[19],team[20],team[21],team[22],team[23],team[24],team[25],team[26],team[27],lastupdateddate, images[i],  league) 
        db.mycursor.execute(sql, val)
        db.mydb.commit()
        i += 1

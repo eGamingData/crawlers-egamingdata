@@ -10,13 +10,13 @@ TABLE = "lol_teams_data"
 utils.clear_db_table(TABLE)
 print("Table " + TABLE + " cleared...")
 
-db.mycursor.execute("SELECT league, teams_data_point FROM lol_leagues")
+db.mycursor.execute("SELECT league, league_name, teams_data_point FROM lol_leagues")
 leagues = db.mycursor.fetchall()
 print("Selected leagues...")
 
 for league in leagues:
     
-    data_point = league[1]
+    data_point = league[2]
     print("Data point: " + data_point)
     league_acronym = league [0]
     print("League: " + league_acronym)
@@ -39,12 +39,13 @@ for league in leagues:
     #Organized data by team
     teams_list = utils.split_list(28, records)
 
-    #TO-DO - Retrieve team images to insert at save_data()
-    teams = utils.get_league_teams(league)
+    #Getting team images
+    teams = utils.get_league_teams(league[0])
     images_list = utils.get_team_image(teams)
-    print(images_list)
     
     #Database Insert
-    utils.save_team_data(teams_list, soup, league_acronym, TABLE)
+    utils.save_team_data(teams_list, soup, league_acronym, TABLE, images_list)
     print("Data for " + league_acronym + " inserted..." )
     driver.quit()
+
+print('Teams data successfully inserted')
